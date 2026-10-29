@@ -58,6 +58,11 @@ class TaskViewModel : ViewModel() {
             })
         }
     }
-}
 
-    /* Fitur 3: Hapus tugas*/
+    /** Hapus tugas berdasarkan ID. */
+    fun deleteTask(id: Int) {
+        _uiState.update { state ->
+            state.copy(tasks = state.tasks.filterNot { it.id == id })
+        }
+    }
+}

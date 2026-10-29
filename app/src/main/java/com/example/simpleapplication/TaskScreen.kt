@@ -5,8 +5,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +31,7 @@ fun TaskScreen(viewModel: TaskViewModel = viewModel()) {
         onCourseChange = viewModel::onCourseChange,
         onAddTask = viewModel::addTask,
         onToggleTask = viewModel::toggleTask,
-        //onDeleteTask = viewModel::deleteTask
+        onDeleteTask = viewModel::deleteTask
     )
 }
 
@@ -44,7 +44,7 @@ fun TaskContent(
     onCourseChange: (String) -> Unit,
     onAddTask: () -> Unit,
     onToggleTask: (Int) -> Unit,
-    //onDeleteTask: (Int) -> Unit
+    onDeleteTask: (Int) -> Unit
 ) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Catatan Tugas Kuliah") }) }
@@ -67,7 +67,7 @@ fun TaskContent(
                         tasks = uiState.tasks,
                         isEmpty = uiState.isEmpty,
                         onToggleTask = onToggleTask,
-                        //onDeleteTask = onDeleteTask,
+                        onDeleteTask = onDeleteTask,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -88,7 +88,7 @@ fun TaskContent(
                         tasks = uiState.tasks,
                         isEmpty = uiState.isEmpty,
                         onToggleTask = onToggleTask,
-                        //onDeleteTask = onDeleteTask,
+                        onDeleteTask = onDeleteTask,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -135,7 +135,7 @@ private fun TaskList(
     tasks: List<Task>,
     isEmpty: Boolean,
     onToggleTask: (Int) -> Unit,
-    //onDeleteTask: (Int) -> Unit,
+    onDeleteTask: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (isEmpty) {
@@ -153,7 +153,7 @@ private fun TaskList(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(tasks, key = { it.id }) { task ->
-                TaskItem(task, onToggleTask)
+                TaskItem(task, onToggleTask, onDeleteTask)
             }
         }
     }
@@ -162,7 +162,8 @@ private fun TaskList(
 @Composable
 private fun TaskItem(
     task: Task,
-    onToggle: (Int) -> Unit
+    onToggle: (Int) -> Unit,
+    onDelete: (Int) -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -177,6 +178,12 @@ private fun TaskItem(
                     textDecoration = if (task.isDone) TextDecoration.LineThrough else null
                 )
                 Text(text = task.course, style = MaterialTheme.typography.bodyMedium)
+            }
+            IconButton(onClick = { onDelete(task.id) }) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Hapus tugas ${task.title}"
+                )
             }
         }
     }
